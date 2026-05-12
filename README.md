@@ -1,143 +1,27 @@
 # qiaomu-heavyskill
 
-> Multi-perspective deep reasoning for Claude Code — parallel subagents think independently, Codex deliberates, you get a polished Markdown + HTML report.
+> 让 Claude Code 真正「深想」一个问题——多个 AI 独立推理，Codex 主持讨论，给你一份比任何单一答案都更扎实的报告。
 >
-> 多视角深度推理 Skill——让 Claude Code 真正「深想」一个问题，而不只是给你一个答案。
+> Multi-perspective deep reasoning for Claude Code — parallel subagents think independently, Codex deliberates, you get a polished HTML report.
 
-**[English](#english) | [中文](#中文)**
-
----
-
-<a name="english"></a>
-## English
-
-### What problem does this solve?
-
-When you ask an AI a hard question, it gives you *one* answer from *one* angle. That's fine for simple lookups. For decisions that matter — tech stack choices, strategic trade-offs, complex analysis — you want multiple independent perspectives, evaluated critically, synthesized into a conclusion that's better than any single view.
-
-HeavySkill does exactly that:
-
-1. **K independent subagents** reason in parallel, each in a fully isolated context (not the same window — true independence)
-2. **Codex hosts deliberation** — critically evaluates each trace, identifies blind spots, synthesizes a conclusion that can be absent from every individual trace
-3. **Claude renders** a readable Markdown report + a polished single-page HTML report
-
-Based on [arXiv:2605.02396](https://arxiv.org/abs/2605.02396) — key finding: deliberation is *generative*, not just aggregative. The synthesizer regularly produces correct answers that no individual trace reached.
-
-### Prerequisites
-
-- [ ] **Claude Code** installed and running (`claude --version`)
-- [ ] **OpenAI Codex plugin** installed in Claude Code — required for the deliberation host
-  ```bash
-  # Install via Claude Code plugin marketplace
-  /plugin marketplace add openai/codex-plugin-cc
-  # Then authenticate
-  /codex:setup
-  ```
-- [ ] `skills` CLI for installation (optional but recommended)
-  ```bash
-  npx skills --version
-  ```
-
-### Installation
-
-```bash
-npx skills add joeseesun/qiaomu-heavyskill
-```
-
-Or clone manually:
-
-```bash
-git clone https://github.com/joeseesun/qiaomu-heavyskill ~/.agents/skills/qiaomu-heavyskill
-```
-
-### Usage — just talk to Claude
-
-```
-"DeepSeek V4 发布对中国的影响，多角度分析一下"
-
-"think harder: should we use microservices or a monolith for this project?"
-
-"讨论一下 React vs Vue 的技术选型"
-
-"分析利弊：把产品做成 SaaS 还是本地部署"
-
-"heavyskill: 最好的所见即所得 Markdown 开源编辑库是哪个"
-```
-
-### Two modes
-
-| Mode | When to use | Example |
-|------|-------------|---------|
-| **Verification** | Question has a correct or clearly better answer | Bug analysis, math, logic, factual claims |
-| **Deliberation** | No single right answer; multiple valid views | Tech stack, product strategy, social topics |
-
-### Output
-
-Each run produces a folder in `~/Downloads/heavyskill-reports/{slug}-{date}/`:
-
-```
-├── traces/
-│   ├── trace-a-{perspective}.md   ← each subagent's full reasoning
-│   ├── trace-b-{perspective}.md
-│   └── ...
-├── deliberation.md                ← Codex raw output (verbatim)
-├── {slug}.md                      ← final Markdown report
-└── {slug}.html                    ← polished single-page HTML report
-```
-
-The HTML report uses an editorial Medium-style design: off-white background, large readable type, generous whitespace, dark verdict block.
-
-### Limitations
-
-- Requires the OpenAI Codex plugin — without it, the deliberation step cannot run
-- Each run launches K parallel subagents (3–5), which counts against your Claude usage
-- Best for questions that genuinely benefit from multiple perspectives; overkill for simple factual questions
-- Maximum 2 deliberation rounds (per paper findings: quality degrades after round 2)
-
-### Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| "codex:codex-rescue not found" | Run `/codex:setup` and authenticate with your OpenAI account |
-| Subagents return empty output | Check Claude Code permissions — subagents need Agent tool access |
-| HTML report not opening | Reports are saved to `~/Downloads/heavyskill-reports/` — check there |
-| Codex output looks wrong | Run `/codex:setup` to verify Codex CLI is installed and authenticated |
-
-### Acknowledgements
-
-- **HeavySkill paper**: [arXiv:2605.02396](https://arxiv.org/abs/2605.02396) — the research this skill is based on
-- **OpenAI Codex plugin**: [codex-plugin-cc](https://github.com/openai/codex-plugin-cc) — the deliberation host
-- Writing style: 乔木 ([@vista8](https://x.com/vista8))
+**[中文](#中文) | [English](#english)**
 
 ---
 
 <a name="中文"></a>
 ## 中文
 
-### 这个 Skill 解决什么问题？
+### 你有没有这种感受
 
-问 AI 一个难问题，它给你一个角度的一个答案。对简单问题够用。对真正重要的决策——技术选型、战略权衡、复杂分析——你需要多个独立视角，批判性地评估，再综合出一个比任何单一视角都更扎实的结论。
+问 AI 一个真正难的问题，它给你一个答案，一个角度。
 
-HeavySkill 做的就是这件事：
+听起来有道理，但你总觉得哪里不对。换个角度问，答案又变了。你不知道该信哪个，也不知道自己是不是漏掉了什么关键的东西。
 
-1. **K 个独立 Subagent** 并行推理，每个在完全隔离的上下文里（不是同一个窗口——是真正的独立，不是"被要求忽略前面"的假独立）
-2. **Codex 主持讨论**——批判性评估每条推理链，找出盲点，综合出一个比任何单一视角都更好的结论
-3. **Claude 生成报告**——可读的 Markdown 报告 + 精致的单页 HTML 报告
+**HeavySkill 解决的就是这个问题。**
 
-基于 [arXiv:2605.02396](https://arxiv.org/abs/2605.02396) ——核心发现：讨论是**生成性的**，不只是聚合。综合者能产出所有单一视角都没有得出的正确答案。
+它让 3–5 个完全独立的 AI 并行思考同一个问题（真正的隔离上下文，不是"被要求忽略前面"的假独立），再由 Codex 主持一场批判性讨论——找出每个视角的盲点，综合出一个比任何单一推理都更深的结论。
 
-### 前置条件
-
-- [ ] **Claude Code** 已安装（`claude --version`）
-- [ ] **OpenAI Codex 插件** 已安装——这是讨论主持人，没有它无法运行
-  ```bash
-  /plugin marketplace add openai/codex-plugin-cc
-  /codex:setup
-  ```
-- [ ] `skills` CLI（可选）
-  ```bash
-  npx skills --version
-  ```
+论文数据（[arXiv:2605.02396](https://arxiv.org/abs/2605.02396)）证明：讨论是**生成性**的。综合者能产出所有单一视角都没有想到的正确答案。
 
 ### 安装
 
@@ -145,15 +29,9 @@ HeavySkill 做的就是这件事：
 npx skills add joeseesun/qiaomu-heavyskill
 ```
 
-或手动克隆：
+### 直接和 Claude 说
 
-```bash
-git clone https://github.com/joeseesun/qiaomu-heavyskill ~/.agents/skills/qiaomu-heavyskill
-```
-
-### 触发方式
-
-直接和 Claude 说就行，不需要记命令：
+不需要记命令，用自然语言触发：
 
 ```
 "DeepSeek V4 发布对中国的影响，多角度分析一下"
@@ -163,34 +41,43 @@ git clone https://github.com/joeseesun/qiaomu-heavyskill ~/.agents/skills/qiaomu
 "think harder: 微服务还是单体架构"
 ```
 
-### 两种模式
+### 你会得到什么
 
-| 模式 | 什么时候用 | 举例 |
-|------|-----------|------|
-| **验证模式** | 问题有正确答案或更好的答案 | Bug 分析、数学、逻辑、事实核查 |
-| **讨论模式** | 没有唯一正确答案，多个立场都成立 | 技术选型、产品策略、社会话题 |
-
-### 输出文件
-
-每次运行在 `~/Downloads/heavyskill-reports/{slug}-{date}/` 生成：
+每次运行在 `~/Downloads/heavyskill-reports/` 生成一个文件夹：
 
 ```
 ├── traces/
-│   ├── trace-a-{视角}.md    ← 每个 subagent 的完整推理过程
+│   ├── trace-a-{视角}.md    ← 每个独立 AI 的完整推理过程
 │   ├── trace-b-{视角}.md
 │   └── ...
-├── deliberation.md          ← Codex 原始输出（逐字保留）
+├── deliberation.md          ← Codex 讨论原始输出（逐字保留）
 ├── {slug}.md                ← 最终 Markdown 报告
 └── {slug}.html              ← 精致单页 HTML 报告
 ```
 
-HTML 报告采用杂志编辑风格：暖白背景、大字号、充足留白、深色结论区块。
+HTML 报告是杂志编辑风格：暖白背景、大字号、充足留白、深色结论区块——可以直接发给别人看。
+
+### 两种模式
+
+| 模式 | 什么时候用 | 举例 |
+|------|-----------|------|
+| **验证模式** | 问题有更好的答案 | Bug 分析、数学推导、逻辑验证 |
+| **讨论模式** | 没有唯一正确答案 | 技术选型、产品策略、架构权衡 |
+
+### 前置条件
+
+- [ ] **Claude Code** 已安装（`claude --version`）
+- [ ] **OpenAI Codex 插件** 已安装——Codex 是讨论主持人，没有它讨论步骤无法运行
+  ```bash
+  /plugin marketplace add openai/codex-plugin-cc
+  /codex:setup
+  ```
 
 ### 限制说明
 
-- 必须安装 OpenAI Codex 插件，否则讨论步骤无法运行
-- 每次启动 3–5 个并行 Subagent，会消耗相应的 Claude 用量
-- 适合真正需要多角度的问题；简单问题用这个是浪费
+- 必须安装 OpenAI Codex 插件
+- 每次启动 3–5 个并行 Subagent，消耗相应 Claude 用量
+- 适合真正需要多视角的问题；简单问题用这个是浪费
 - 最多 2 轮讨论（论文数据：第 2 轮后质量下降）
 
 ### 常见问题
@@ -207,6 +94,85 @@ HTML 报告采用杂志编辑风格：暖白背景、大字号、充足留白、
 - **HeavySkill 论文**：[arXiv:2605.02396](https://arxiv.org/abs/2605.02396)
 - **OpenAI Codex 插件**：[codex-plugin-cc](https://github.com/openai/codex-plugin-cc)
 - 乔木（[@vista8](https://x.com/vista8)）
+
+---
+
+<a name="english"></a>
+## English
+
+### The problem
+
+You ask AI a hard question. It gives you one answer, from one angle.
+
+Sounds reasonable. But you're not sure you're getting the full picture. Ask it from a different angle, you get a different answer. You don't know which to trust, or what you're missing.
+
+**HeavySkill fixes this.**
+
+It runs 3–5 fully independent AI agents in parallel — each in a truly isolated context, not just "instructed to ignore prior reasoning" — then uses Codex to host a critical deliberation: identify each trace's blind spots, synthesize a conclusion that goes deeper than any single view.
+
+Key finding from [arXiv:2605.02396](https://arxiv.org/abs/2605.02396): deliberation is *generative*, not just aggregative. The synthesizer regularly produces correct answers absent from every individual trace.
+
+### Installation
+
+```bash
+npx skills add joeseesun/qiaomu-heavyskill
+```
+
+### Usage — just talk to Claude
+
+```
+"DeepSeek V4 发布对中国的影响，多角度分析一下"
+"think harder: should we use microservices or a monolith?"
+"heavyskill: best WYSIWYG Markdown open source editor"
+"分析利弊：SaaS vs on-premise deployment"
+```
+
+### Output
+
+Each run creates a folder in `~/Downloads/heavyskill-reports/{slug}-{date}/`:
+
+```
+├── traces/
+│   ├── trace-a-{perspective}.md   ← each agent's full reasoning
+│   ├── trace-b-{perspective}.md
+│   └── ...
+├── deliberation.md                ← Codex raw output (verbatim)
+├── {slug}.md                      ← final Markdown report
+└── {slug}.html                    ← polished single-page HTML report
+```
+
+The HTML report uses a Medium editorial style: off-white background, large readable type, generous whitespace, dark verdict block.
+
+### Two modes
+
+| Mode | When | Example |
+|------|------|---------|
+| **Verification** | Has a correct/better answer | Bug analysis, math, logic |
+| **Deliberation** | No single right answer | Tech stack, strategy, architecture |
+
+### Prerequisites
+
+- [ ] **Claude Code** installed (`claude --version`)
+- [ ] **OpenAI Codex plugin** — required for the deliberation host
+  ```bash
+  /plugin marketplace add openai/codex-plugin-cc
+  /codex:setup
+  ```
+
+### Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "codex:codex-rescue not found" | Run `/codex:setup` and authenticate with your OpenAI account |
+| Subagents return empty output | Check Claude Code permissions — subagents need Agent tool access |
+| HTML report not found | Reports are saved to `~/Downloads/heavyskill-reports/` |
+| Codex output looks wrong | Run `/codex:setup` to verify Codex CLI is installed and authenticated |
+
+### Acknowledgements
+
+- **HeavySkill paper**: [arXiv:2605.02396](https://arxiv.org/abs/2605.02396)
+- **OpenAI Codex plugin**: [codex-plugin-cc](https://github.com/openai/codex-plugin-cc)
+- Writing style: 乔木 ([@vista8](https://x.com/vista8))
 
 ---
 
