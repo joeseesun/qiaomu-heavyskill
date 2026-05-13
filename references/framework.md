@@ -399,22 +399,31 @@ Medium-style: off-white background, near-black text, generous whitespace, large 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>[SHORT QUESTION] — HeavySkill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:         #f8f7f4;
-  --surface:    #ffffff;
-  --surface-2:  #f2f1ee;
-  --border:     #e8e5df;
-  --border-2:   #ccc9c0;
-  --text:       #0f0f0f;
-  --text-2:     #3a3a3a;
-  --text-muted: #737068;
-  --text-faint: #a8a49c;
-  --accent:     #0f0f0f;
-  --ui: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'SFMono-Regular', 'Fira Code', monospace;
+  /* ── Monocle 配色（guizang 墨水经典主题） ── */
+  --bg:         #f1efea;
+  --surface:    #faf9f6;
+  --surface-2:  #e8e5de;
+  --border:     #dedad4;
+  --border-2:   #c4bfb7;
+  --text:       #0a0a0b;
+  --text-2:     #2c2c2d;
+  --text-muted: #6b6760;
+  --text-faint: #aaa79f;
+  --accent:     #0a0a0b;
+
+  /* ── 字体栈（guizang 三层体系）── */
+  --display:    'Playfair Display', 'Source Serif 4', Georgia, serif;
+  --serif:      'Noto Serif SC', 'Source Serif 4', source-han-serif-sc, serif;
+  --sans:       'Noto Sans SC', source-han-sans-sc, system-ui, sans-serif;
+  --mono:       'IBM Plex Mono', 'SFMono-Regular', 'Fira Code', monospace;
+  --ui:         var(--sans);
 }
 
 html { scroll-behavior: smooth; }
@@ -439,23 +448,23 @@ body {
   height: 54px; padding: 0 32px;
   display: flex; align-items: center; justify-content: space-between;
 }
-.nav-brand { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.nav-brand { font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
 .nav-meta  { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
 
 /* ── Hero ── */
 .hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); }
 .hero-eyebrow {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px;
 }
 .hero-h1 {
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
-  font-weight: 800; letter-spacing: -0.04em; line-height: 1.12;
+  font-family: var(--serif); font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900; letter-spacing: -0.03em; line-height: 1.1;
   color: var(--text); margin-bottom: 22px;
 }
 .hero-sub {
-  font-size: 1.05rem; color: var(--text-muted);
-  line-height: 1.7; max-width: 560px; margin-bottom: 32px;
+  font-family: var(--sans); font-size: 1.05rem; color: var(--text-muted);
+  line-height: 1.75; max-width: 560px; margin-bottom: 32px;
 }
 .hero-chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip {
@@ -468,70 +477,70 @@ body {
 .sec { padding: 64px 0; border-bottom: 1px solid var(--border); }
 .sec:last-of-type { border-bottom: none; }
 .sec-num {
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--text-faint); margin-bottom: 4px;
+  color: var(--text-faint); margin-bottom: 6px;
 }
 .sec-title {
-  font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em;
+  font-family: var(--serif); font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em;
   color: var(--text); margin-bottom: 36px;
 }
 
 /* ── Trace grid ── */
 .trace-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
   background: var(--border); border: 1px solid var(--border); border-radius: 12px;
   overflow: hidden;
 }
 @media (max-width: 580px) { .trace-grid { grid-template-columns: 1fr; } }
 
 .trace {
-  background: var(--surface); padding: 28px;
-  border-left: 3px solid var(--tc, #0f0f0f);
+  background: var(--surface); padding: 30px 28px;
   transition: background 0.12s;
+  /* No border-left accent — colored left stripes look cheap */
 }
 .trace:hover { background: #fdfcfa; }
 
 .trace-label {
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-faint); margin-bottom: 6px;
+  color: var(--tc, var(--text-faint)); opacity: 0.7; margin-bottom: 14px;
 }
 .trace-pick {
-  display: inline-flex; align-items: center; gap: 5px;
+  /* Plain colored text, no border box */
   font-family: var(--mono); font-size: 11px; font-weight: 600;
-  color: var(--tc, #0f0f0f); border: 1.5px solid var(--tc, #0f0f0f);
-  border-radius: 4px; padding: 2px 9px; margin-bottom: 12px; opacity: 0.85;
+  color: var(--tc, var(--text-muted));
+  display: block; margin-bottom: 14px; letter-spacing: 0.03em;
 }
 .trace-name {
-  font-size: 14px; font-weight: 700; letter-spacing: -0.01em;
-  color: var(--text); margin-bottom: 12px;
+  font-family: var(--serif); font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+  color: var(--text); margin-bottom: 14px;
 }
-.trace-body { font-size: 14px; line-height: 1.72; color: var(--text-2); margin-bottom: 16px; }
+.trace-body { font-family: var(--sans); font-size: 14px; line-height: 1.78; color: var(--text-2); margin-bottom: 18px; }
 .trace-blind {
-  font-size: 12px; color: var(--text-muted); line-height: 1.6;
+  font-family: var(--sans); font-size: 12px; color: var(--text-muted); line-height: 1.65;
   border-top: 1px solid var(--border); padding-top: 12px;
 }
-.trace-blind::before { content: '盲点 → '; color: var(--text-faint); font-weight: 600; }
+.trace-blind::before { content: '盲点 → '; color: var(--text-faint); font-family: var(--mono); font-size: 10px; font-weight: 600; }
 
 /* ── Discovery ── */
 .discovery {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 36px;
 }
-.discovery p { font-size: 17px; line-height: 1.85; color: var(--text-2); }
-.discovery p + p { margin-top: 1.2em; }
-.discovery strong { color: var(--text); }
+.discovery p { font-family: var(--sans); font-size: 17px; line-height: 1.9; color: var(--text-2); }
+.discovery p + p { margin-top: 1.3em; }
+.discovery strong { font-family: var(--serif); color: var(--text); font-weight: 700; }
 
 /* ── Perspective prose ── */
 .persp + .persp { margin-top: 2.5em; padding-top: 2.5em; border-top: 1px solid var(--border); }
 .persp-tag {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
 }
-.persp p { font-size: 17px; line-height: 1.85; color: var(--text-2); }
+.persp p { font-family: var(--sans); font-size: 17px; line-height: 1.9; color: var(--text-2); }
 .persp p + p { margin-top: 1em; }
-.persp strong { color: var(--text); }
+.persp strong { font-family: var(--serif); color: var(--text); font-weight: 700; }
 
 /* ── Verdict ── */
 .verdict {
@@ -539,13 +548,13 @@ body {
   border-radius: 12px; padding: 48px; margin-bottom: 24px;
 }
 .verdict-tag {
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  font-family: var(--mono); font-size: 10px; font-weight: 500;
   letter-spacing: 0.14em; text-transform: uppercase;
-  color: rgba(255,255,255,0.45); margin-bottom: 18px;
+  color: rgba(255,255,255,0.4); margin-bottom: 18px;
 }
 .verdict-text {
-  font-size: clamp(1.1rem, 2.5vw, 1.55rem);
-  font-weight: 700; line-height: 1.42; letter-spacing: -0.025em;
+  font-family: var(--serif); font-size: clamp(1.15rem, 2.5vw, 1.6rem);
+  font-weight: 700; line-height: 1.5; letter-spacing: -0.02em;
   color: #ffffff;
 }
 
@@ -558,10 +567,10 @@ body {
   border-radius: 10px; padding: 22px 24px;
 }
 .supp-tag {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
 }
-.supp-body { font-size: 14px; line-height: 1.7; color: var(--text-2); }
+.supp-body { font-family: var(--sans); font-size: 14px; line-height: 1.75; color: var(--text-2); }
 .supp-body p + p { margin-top: 0.7em; }
 .supp-body code {
   font-family: var(--mono); font-size: 12px;
@@ -609,28 +618,45 @@ body {
 @media print {
   @page {
     size: A4;
-    margin: 18mm 20mm;
+    margin: 20mm 22mm;
+  }
+  /* 打印时切换为衬线正文，更有书感 */
+  body {
+    font-family: 'Noto Serif SC', 'Source Serif 4', Georgia, serif;
+    font-size: 13.5px; background: #fff; color: #0a0a0b;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
   .nav { display: none; }
-  body { font-size: 14px; background: #fff; color: #000; }
   .wrap { max-width: 100%; padding: 0; }
-  .hero { padding: 32px 0 24px; }
-  .hero-h1 { font-size: 1.9rem; }
-  .sec { padding: 28px 0; break-inside: avoid; }
-  .trace-grid { display: block; background: none; border: none; }
+  .hero { padding: 32px 0 20px; border-bottom: 1.5px solid #0a0a0b; }
+  .hero-eyebrow { font-family: 'IBM Plex Mono', monospace; }
+  .hero-h1 { font-size: 2rem; line-height: 1.1; }
+  .hero-sub { font-family: 'Noto Sans SC', sans-serif; font-size: 0.95rem; }
+  .hero-chips { display: none; }
+  .sec { padding: 24px 0 20px; break-inside: avoid; }
+  .sec-num { font-family: 'IBM Plex Mono', monospace; }
+  .trace-grid { display: block; background: none; border: none; border-radius: 0; }
   .trace {
-    border: 1px solid #ccc; border-left: 3px solid var(--tc, #000);
-    border-radius: 6px; margin-bottom: 10px; break-inside: avoid;
+    border: 0.5px solid #c4bfb7;
+    border-radius: 0; margin-bottom: 8px; break-inside: avoid;
+    padding: 16px 18px;
   }
-  .discovery, .supp, .callout-voice { break-inside: avoid; }
-  .verdict {
-    background: #111 !important; color: #fff !important;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
-    break-inside: avoid;
-  }
+  .trace-name { font-family: 'Noto Serif SC', serif; }
+  .trace-body { font-family: 'Noto Sans SC', sans-serif; font-size: 12.5px; }
+  .discovery { border: 0.5px solid #c4bfb7; border-radius: 0; break-inside: avoid; }
+  .discovery p { font-size: 14px; }
+  .persp p { font-size: 14px; }
   .supp-grid { display: block; }
-  .supp { margin-bottom: 10px; break-inside: avoid; }
+  .supp { margin-bottom: 8px; break-inside: avoid; border-radius: 0; }
+  .supp-tag { font-family: 'IBM Plex Mono', monospace; }
+  .callout-voice { border-radius: 0; break-inside: avoid; }
+  .verdict {
+    background: #0a0a0b !important; color: #f1efea !important;
+    border-radius: 0; break-inside: avoid; padding: 32px;
+  }
+  .verdict-text { font-size: 1.15rem; line-height: 1.55; }
   a { color: inherit; text-decoration: none; }
+  .footer { padding: 16px 0; }
 }
 </style>
 </head>
