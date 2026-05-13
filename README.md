@@ -52,10 +52,11 @@ npx skills add joeseesun/qiaomu-heavyskill
 │   └── ...
 ├── deliberation.md          ← Codex 讨论原始输出（逐字保留）
 ├── {slug}.md                ← 最终 Markdown 报告
-└── {slug}.html              ← 精致单页 HTML 报告
+├── {slug}.html              ← 精致单页 HTML 报告
+└── {slug}.pdf               ← 合并 PDF（推理过程 + 讨论 + 最终结论，一份完整文档）
 ```
 
-HTML 报告是杂志编辑风格：暖白背景、大字号、充足留白、深色结论区块——可以直接发给别人看。
+**PDF 是最终的可分享产物**——把推理过程、Codex 讨论发现、最终判断合并成一份文档，可以直接发给别人。HTML 报告采用杂志编辑风格，打印 CSS 已专门优化，也可以从浏览器 File → Print → Save as PDF 导出。
 
 ### 两种模式
 
@@ -138,10 +139,11 @@ Each run creates a folder in `~/Downloads/heavyskill-reports/{slug}-{date}/`:
 │   └── ...
 ├── deliberation.md                ← Codex raw output (verbatim)
 ├── {slug}.md                      ← final Markdown report
-└── {slug}.html                    ← polished single-page HTML report
+├── {slug}.html                    ← polished single-page HTML report
+└── {slug}.pdf                     ← combined PDF (traces + deliberation + verdict)
 ```
 
-The HTML report uses a Medium editorial style: off-white background, large readable type, generous whitespace, dark verdict block.
+**The PDF is the primary shareable artifact** — everything in one document. The HTML uses Medium editorial style with print-optimised CSS, so browser Print → Save as PDF works too if Chrome headless isn't available.
 
 ### Two modes
 

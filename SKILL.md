@@ -2,8 +2,8 @@
 name: qiaomu-heavyskill
 description: |
   Deep multi-perspective reasoning via parallel isolated subagents + Codex deliberation host,
-  with final Markdown + HTML report output. Use for complex questions, tech decisions, social
-  topics, architectural choices, hard analysis, or any question worth thinking harder about.
+  with final Markdown + HTML + PDF report output. Use for complex questions, tech decisions,
+  social topics, architectural choices, hard analysis, or any question worth thinking harder about.
   Triggers include 深度分析, 多角度推理, 验证答案, heavyskill, think harder, 让我们深入思考,
   推敲一下, 讨论一下, 分析利弊. Do not use for simple factual lookups or routine tasks.
 ---
@@ -44,6 +44,7 @@ Sequential traces in the same context window are architecturally wrong — the m
 5. **Render report** — Claude generates:
    - `heavyskill-report.md` — structured Markdown report
    - `heavyskill-report.html` — single-page readable HTML report
+   - `heavyskill-report.pdf` — combined PDF (traces overview + deliberation + final verdict), exported from HTML via Chrome headless
 6. **Iterate** (optional) — if Codex confidence is Low/Medium, one more deliberation round. Max 2 total.
 
 See [Framework](references/framework.md) for subagent prompts, approach types, perspective lenses, Codex prompt template, and HTML template.
@@ -55,5 +56,6 @@ See [Framework](references/framework.md) for subagent prompts, approach types, p
 - Write Codex raw output to `deliberation.md`.
 - Write final Markdown report to `{slug}.md`.
 - Write final HTML report to `{slug}.html` — Medium-style (off-white bg, near-black text, large readable type, generous whitespace, editorial feel), self-contained, no external dependencies.
+- After writing HTML, export `{slug}.pdf` via Chrome headless (see framework.md Step 3 for command). PDF is the primary shareable artifact — it combines the traces overview, deliberation process, and final verdict in one document.
 - Present Codex output verbatim in the conversation. No paraphrasing.
 - Report name is generated from the question — never a generic filename.

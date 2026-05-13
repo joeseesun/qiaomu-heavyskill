@@ -57,7 +57,8 @@ Create this directory tree before writing any files:
       │   └── trace-c-{approach-slug}.md   (and so on for K)
       ├── deliberation.md                  (Codex raw output)
       ├── {slug}.md                        (final Markdown report)
-      └── {slug}.html                      (final HTML report)
+      ├── {slug}.html                      (final HTML report)
+      └── {slug}.pdf                       (combined PDF: traces + deliberation + verdict)
 ```
 
 Create the folder with:
@@ -603,6 +604,34 @@ body {
   flex-wrap: wrap; gap: 10px;
 }
 .footer span { font-size: 12px; color: var(--text-muted); }
+
+/* ── Print / PDF ── */
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 20mm;
+  }
+  .nav { display: none; }
+  body { font-size: 14px; background: #fff; color: #000; }
+  .wrap { max-width: 100%; padding: 0; }
+  .hero { padding: 32px 0 24px; }
+  .hero-h1 { font-size: 1.9rem; }
+  .sec { padding: 28px 0; break-inside: avoid; }
+  .trace-grid { display: block; background: none; border: none; }
+  .trace {
+    border: 1px solid #ccc; border-left: 3px solid var(--tc, #000);
+    border-radius: 6px; margin-bottom: 10px; break-inside: avoid;
+  }
+  .discovery, .supp, .callout-voice { break-inside: avoid; }
+  .verdict {
+    background: #111 !important; color: #fff !important;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    break-inside: avoid;
+  }
+  .supp-grid { display: block; }
+  .supp { margin-bottom: 10px; break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }
+}
 </style>
 </head>
 <body>
@@ -750,6 +779,48 @@ body {
 
 ---
 
+## Step 3.5: PDF Export
+
+After writing `{slug}.html`, export a PDF using Chrome headless. Run this bash command:
+
+```bash
+SLUG="{slug}"
+REPORT_DIR="$HOME/Downloads/heavyskill-reports/${SLUG}"
+HTML_FILE="${REPORT_DIR}/${SLUG}.html"
+PDF_FILE="${REPORT_DIR}/${SLUG}.pdf"
+
+# Try Chrome locations in order
+CHROME=""
+for path in \
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  "/Applications/Chromium.app/Contents/MacOS/Chromium" \
+  "google-chrome" \
+  "chromium"; do
+  if [ -x "$path" ] || command -v "$path" &>/dev/null 2>&1; then
+    CHROME="$path"; break
+  fi
+done
+
+if [ -n "$CHROME" ]; then
+  "$CHROME" \
+    --headless --disable-gpu \
+    --run-all-compositor-stages-before-draw \
+    --print-to-pdf="$PDF_FILE" \
+    --no-margins \
+    "file://${HTML_FILE}" 2>/dev/null \
+  && echo "PDF saved: $PDF_FILE" \
+  || echo "Chrome PDF export failed"
+else
+  echo "Chrome not found — open ${HTML_FILE} in browser and use File > Print > Save as PDF"
+fi
+```
+
+If Chrome is not available, tell the user to open the HTML in a browser and use **File → Print → Save as PDF** — the `@media print` styles in the HTML are already optimised for this.
+
+The PDF is the primary shareable artifact. It contains the complete report: traces overview, Codex deliberation findings, and the final verdict block — all in one document.
+
+---
+
 ## Step 4: Optional Iteration (Max 2 Rounds)
 
 Paper Figure 4: HM@K improves per round but HP@K degrades after round 2.
@@ -769,6 +840,7 @@ If Codex confidence is Low or Medium:
 | Verification approach types for open questions | Use Deliberation perspective lenses instead |
 | Claude does the deliberation | Always handoff to Codex via `/codex:rescue` |
 | Paraphrase Codex output | Verbatim in conversation and in report |
-| Skip the HTML report | Both Markdown and HTML are mandatory outputs |
+| Skip the HTML report | Markdown, HTML, and PDF are all mandatory outputs |
+| Skip PDF export | Run the Chrome headless command in Step 3.5 — PDF is the shareable artifact |
 | Synthesize when all traces are flawed | Codex must re-derive from scratch — prompt makes this explicit |
 | More than 2 deliberation rounds | HP@K degrades — stop at round 2 |
